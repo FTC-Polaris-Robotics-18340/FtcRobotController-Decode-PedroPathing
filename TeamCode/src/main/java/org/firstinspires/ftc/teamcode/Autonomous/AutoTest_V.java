@@ -17,55 +17,76 @@ public class AutoTest_V extends OpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
 
-    private final Pose startPose = new Pose(0, 0, Math.toRadians(90)); // Start Pose of our robot.
-    private final Pose Pose1 = new Pose(24, 0, Math.toRadians(90)); //36// Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose startPose = new Pose(48, 8, Math.toRadians(90));
+    private final Pose scorePose = new Pose(48, 32, Math.toRadians(135));
+
+    private final Pose align1 = new Pose (48, 84, Math.toRadians(180));
+
+    private final Pose pick1 = new Pose(18, 84, Math.toRadians(180));
 
     private Path scorePreload;
-    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    private PathChain path1, path2, path3, path4;
     public void buildPaths() {
         //follower.setStartingPose(new Pose(0, 0, Math.toRadians(90)));
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
     /* Here is an example for Constant Interpolation
     scorePreload.setConstantInterpolation(startPose.getHeading()); */
         /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        grabPickup1 = follower.pathBuilder()
-                //.addPath(new BezierCurve(follower::getPose, new Pose(-24, 24)))//-24
-                .addPath(new BezierLine(startPose, Pose1))
-                .setLinearHeadingInterpolation(startPose.getHeading(), Pose1.getHeading())
+        path1 = follower.pathBuilder()
+                .addPath(new BezierLine(startPose, scorePose))
+                .setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading())
+                .build();
+        path2 = follower.pathBuilder()
+                .addPath(new BezierCurve(scorePose, align1))
+                .setLinearHeadingInterpolation(scorePose.getHeading(), align1.getHeading())
+                .build();
+        path3 = follower.pathBuilder()
+                .addPath(new BezierCurve(align1, pick1))
+                .setLinearHeadingInterpolation(align1.getHeading(), pick1.getHeading())
+                .build();
+        path4 = follower.pathBuilder()
+                .addPath(new BezierCurve(pick1, scorePose))
+                .setLinearHeadingInterpolation(pick1.getHeading(), scorePose.getHeading())
+                .build();
 
-                .build();
-        grabPickup2 = follower.pathBuilder()
-                .addPath(new BezierLine(Pose1, startPose))
-                .setLinearHeadingInterpolation(Pose1.getHeading(), startPose.getHeading())
-                .build();
     }
 
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                if(!follower.isBusy()) {
+                follower.followPath(path1);
+                setPathState(1);
+                pathTimer.resetTimer();
+                break;
+
+            case 1:
+                while (pathTimer.getElapsedTimeSeconds() < 3.0){}
+                if (!follower.isBusy()) {
                     /* Score Preload */
+
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup1,true);
+                    follower.followPath(path2, true);
 
                     setPathState(2);
                 }
-                break;
-            case 1:
-            /* You could check for
-            - Follower State: "if(!follower.isBusy()) {}"
-            - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
-            - Robot Position: "if(follower.getPose().getX() > 36) {}"
-            */
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+
                 break;
             case 2:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
-                if(!follower.isBusy()) {
-                    /* Grab Sample */
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(grabPickup2,true);
-                    setPathState(-1);
+                if (!follower.isBusy()) {
+                    /* Score Preload */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(path3, true);
+                    setPathState(3);
+                }
+                break;
+            case 3:
+                if (!follower.isBusy()) {
+                    /* Score Preload */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(path4, true);
+                    setPathState(4);
                 }
                 break;
         }
@@ -78,12 +99,8 @@ public class AutoTest_V extends OpMode {
 
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
-    public void loop() {
-        // These loop the movements of the robot, these must be called continuously in order to work
-        follower.update();
+    public void loop() { follower.update();
         autonomousPathUpdate();
-        // Feedback to Driver Hub for debugging
-        //telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
