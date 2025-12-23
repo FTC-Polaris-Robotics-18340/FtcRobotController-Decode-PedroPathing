@@ -9,14 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Configurable
 @TeleOp(name = "testTele")
 public class TeleOpV1 extends LinearOpMode{
-
     static Robot robot;
     static MecanumDrive drive;
     static GamepadEx gamepad1Ex;
     static GamepadEx gamepad2Ex;
     private void HardwareStart() {
-        robot = new Robot();
-        robot.init(hardwareMap);
+        robot = new Robot(hardwareMap);
         drive = new MecanumDrive(robot.FrontLeft, robot.FrontRight, robot.BackLeft, robot.BackRight);
 
         gamepad1Ex = new GamepadEx(gamepad1);
@@ -36,5 +34,4 @@ public class TeleOpV1 extends LinearOpMode{
             );
         }
     }
-
 }

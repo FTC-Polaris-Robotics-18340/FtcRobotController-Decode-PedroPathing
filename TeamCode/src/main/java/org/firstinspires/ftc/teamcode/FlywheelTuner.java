@@ -57,7 +57,7 @@ public class FlywheelTuner extends OpMode {
             P -= stepSizes[stepIndex];
         }
 
-        //set new PIDF coefficients
+        // Set new PIDF coefficients
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         flywheelMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 

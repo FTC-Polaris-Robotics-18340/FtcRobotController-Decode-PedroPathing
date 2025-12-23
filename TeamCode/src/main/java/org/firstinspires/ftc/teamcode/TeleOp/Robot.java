@@ -11,19 +11,13 @@ public class Robot {
     public MotorEx BackLeft;
     public MotorEx BackRight;
 
-    private static HardwareMap hwMapRobot;
-
-
-    public void init(HardwareMap hwMap) {
-        hwMapRobot = hwMap;
-
-        FrontLeft = new MotorEx(hwMap, "FL");
-        FrontRight = new MotorEx(hwMap, "FR");
-        BackLeft = new MotorEx(hwMap, "BL");
-        BackRight = new MotorEx(hwMap, "BR");
+    public Robot(HardwareMap hardwareMap) {
+        FrontLeft = new MotorEx(hardwareMap, "FL");
+        FrontRight = new MotorEx(hardwareMap, "FR");
+        BackLeft = new MotorEx(hardwareMap, "BL");
+        BackRight = new MotorEx(hardwareMap, "BR");
 
         //Invert Motors if needed
-
         FrontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         BackLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
