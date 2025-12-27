@@ -24,6 +24,7 @@ public class Robot {
         FrontRight = new MotorEx(hardwareMap, "FR");
         BackLeft = new MotorEx(hardwareMap, "BL");
         BackRight = new MotorEx(hardwareMap, "BR");
+
         // bind intake/outtake using the exact device names from your expansion hub
         // (your configuration uses "In" and "Sp")
         try {
@@ -32,11 +33,11 @@ public class Robot {
             inTake = null;
         }
 
-        try {
-            outTake = new MotorEx(hardwareMap, "Sp");
-        } catch (Exception ignored) {
-            outTake = null;
-        }
+//        try {
+//            outTake = new MotorEx(hardwareMap, "Sp");
+//        } catch (Exception ignored) {
+//            outTake = null;
+//        }
 
         // Prefer passing the exact DcMotorEx instances into subsystem wrappers
         try {
