@@ -13,7 +13,8 @@ public class Intake { // 1620 RPM
     }
 
     public Intake(HardwareMap hardwareMap) {
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        // bind to the intake motor using the configured name "In"
+        intake = hardwareMap.get(DcMotorEx.class, "In");
     }
 
     public void startIntake() {
@@ -22,5 +23,10 @@ public class Intake { // 1620 RPM
 
     public void stopIntake() {
         intake.setPower(0);
+    }
+
+    // allow setting intake power directly
+    public void setPower(double power) {
+        intake.setPower(power);
     }
 }
