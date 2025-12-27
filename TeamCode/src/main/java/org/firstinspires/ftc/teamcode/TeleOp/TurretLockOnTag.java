@@ -33,35 +33,21 @@ public class TurretLockOnTag extends OpMode {
     private Servo yawServo;
     private AnalogInput yawServoFeedback;
 
-    // PID state
-    private double lastError = 0;
-    private double lastAngleError = 0;
-    private double integralSum = 0;
-    private double integralSum2 = 0;
+    // PID state variables
+    private double lastErrorYaw = 0;
+    private double integralSumYaw = 0;
+    private double lastErrorPitch = 0;
+    private double integralSumPitch = 0;
     private long lastTime = 0;
 
-    // PID constants (tune these!)
-    private final double kP = 0.02;
+    // PID constants - Tune these!
+    private final double kP = 0.02;  // Yaw Motor kP
     private final double kI = 0.000;
     private final double kD = 0.000;
-
-    private final double kP2 = 0.02;
-    private final double kI2 = 0.000;
-    private final double kD2 = 0.000;
-
-    private final double kPy = 0.02;
-
-    // PID state variables for Yaw axis (using your provided structure)
-    private double lastErrorYaw = 0; // Tracks the previous 'tx' error
-    private double integralSumYaw = 0;
-
-
-    // PID w servo
-    private final double kP_Yaw = 0.02; // Tune these specifically for servo movement
-    private final double kI_Yaw = 0.000;
-    private final double kD_Yaw = 0.001;
+    private final double kPy = 0.02; // Pitch Motor kP
 
     private final double DEADZONE = 0.5;
+
 
     @Override
     public void init() {
@@ -119,12 +105,13 @@ public class TurretLockOnTag extends OpMode {
             double dt = (currentTime - lastTime) / 1e9;
             lastTime = currentTime;
 
-            integralSum += tx * dt;
-            double derivative = (tx - lastError) / dt;
-            lastError = tx;
+            // Yaw PID Calculation
+            integralSumYaw += tx * dt;
+            double derivativeYaw = (tx - lastErrorYaw) / dt;
+            lastErrorYaw = tx;
 
-            double output = (kP * tx) + (kI * integralSum) + (kD * derivative);
-            output = Math.max(-1, Math.min(1, output));
+            double output = (kP * tx) + (kI * integralSumYaw) + (kD * derivativeYaw);
+            output = Range.clip(output, -1, 1);
 
             double outputY = (kPy * ty);
             outputY = Range.clip(outputY, -1, 1); // Use Range.clip for clean code
@@ -133,59 +120,40 @@ public class TurretLockOnTag extends OpMode {
             // If we have a valid result, run the shooter logic (which should be handled separately from yaw/pitch movement)
             // The previous code runs this regardless of whether 'tx' or 'ty' is in range.
 
-            double feedbackVoltage = shootServoFeedback.getVoltage();
-            // Normalize the voltage from 0.0-3.3V to 0.0-1.0 position value
-            double shootCurrentPos = feedbackVoltage / 3.3;
-            // whatever linear relationship, we can find angle here
-            double currAngle = shootCurrentPos; // Changed variable type
+            // --- SHOOTER SERVO LOGIC (Direct Position) ---
+            // 1. Calculate your desired angle (Degrees) based on ty/distance math
+            double desiredAngle = angleFromDist();
 
-            //PID for servo of shooter--------------------
-            //based on math, we find out the desired angle based on distance,
-            // then just simply put it as a ratio 0 < r < 1.
-            double desiredAngle = 67; //placeholder (degrees)
-            double angleError = desiredAngle - currAngle;
-            integralSum2 += angleError * dt;
-            double derivative2 = (angleError - lastAngleError) / dt;
-            lastAngleError = angleError;
-            double output2 = (kP2 * angleError) + (kI2 * integralSum2) + (kD2 * derivative2);
-            output2 = Range.clip(output2, -1, 1); // Use Range.clip
+            // 2. Convert degrees to 0.0 - 1.0 using your helper method
+            double finalPositionCommand = convertDegreesToPosition(desiredAngle);
 
-            // Use current position + incremental PID nudge
-            double finalPositionCommand = Range.clip(shootCurrentPos + (output2 * 0.05), 0.0, 1.0);
-            shootServo.setPosition(finalPositionCommand);
+            // 3. Send command directly to the servo
+            shootServo.setPosition(Range.clip(finalPositionCommand, 0.0, 1.0));
             // end of shooter stuff---------------------------------------
 
 
             // --- YAW SERVO LOGIC ---
             // Only apply power/movement if the error is greater than the deadzone
             if (Math.abs(tx) > DEADZONE) {
-                //replace original motor turret tracking w ts servo-------------------
-                // 1. Read the current position from the feedback wire first, normalizing the voltage (0-3.3V) to a 0.0-1.0 position value.
-                currentServoPositionValue = yawServoFeedback.getVoltage() / 3.3; // Reusing existing variable name - ASSUMING ITS 0-3.3
+                // Map tx directly to a servo position offset
+                // 0.5 is center, 0.01 is the 'sensitivity' (Tune this!)
+                double targetYawPos = 0.5 + (tx * 0.02);
+                yawServo.setPosition(Range.clip(targetYawPos, 0.0, 1.0));
 
-                // 2. The existing 'output' variable (your yaw PID result, -1 to 1) is used as an *adjustment* to the current position.
-                // Use a small constant like 0.05 to scale the adjustment so the movement is smooth.
-                double finalPositionCommand2 = Range.clip(currentServoPositionValue + (output * 0.05), 0.0, 1.0);
-
-                // 3. Send the command to the Axon Servo
-                yawServo.setPosition(finalPositionCommand2);
-
-                // If you still want the motor to run at the same time:
-                YawMotor.setPower(output);
-
+                YawMotor.setPower(output); // Keep motor for torque
             } else {
-                // Stop movement if we are in the deadzone
                 YawMotor.setPower(0);
-                // We do NOT stop the servo position command; it holds its last commanded position
+                integralSumYaw = 0; // RESET Integral when in deadzone to prevent "shivering"
             }
 
-
-            // --- PITCH MOTOR LOGIC ---
             if (Math.abs(ty) > DEADZONE) {
+                integralSumPitch += ty * dt; // Track vertical error
                 PitchMotor.setPower(outputY);
             } else {
                 PitchMotor.setPower(0);
+                integralSumPitch = 0; // Fix: Use the correct variable name
             }
+
 
             telemetry.addData("PID Error in Yaw", tx);
             telemetry.addData("PID Output in Yaw", output);
@@ -193,6 +161,13 @@ public class TurretLockOnTag extends OpMode {
             telemetry.addData("PID Error in Pitch", ty);
             telemetry.addData("PID Output in Pitch", outputY);
 
+        } else {
+            // TARGET LOST: Stop everything for safety
+            YawMotor.setPower(0);
+            PitchMotor.setPower(0);
+            // Optional: shootServo.setPosition(0.5); // Reset shooter to idle
+            integralSumYaw = 0;
+            integralSumPitch = 0;
         }
     }
 
@@ -200,5 +175,25 @@ public class TurretLockOnTag extends OpMode {
         // This calculates a position ratio (0.0 to 1.0) based on degrees
         double pos = deg / 180.0;
         return pos;
+    }
+
+    public double angFromDist(double dist, boolean hi) {
+        //find quadratic eq. constants from quad regression given inputs & outputs
+        //coeffs for high velocity
+        double a = 0.0;
+        double b = 0.0;
+        double c = 0.0;
+        if (hi) {
+            a = 67.0;
+            b = 67.0;
+            c = 67.0;
+        } else {
+            a = 41.0;
+            b = 41.0;
+            c = 41.0;
+        }
+
+        double ang = a * dist * dist + b * dist + c;
+        return ang;
     }
 }
