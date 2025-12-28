@@ -64,6 +64,6 @@ public class LLTest extends OpMode {
         // eq: y = Ax^B
         double A = 66.64891;
         double B = -0.5320883;
-        return (A * Math.pow(ta, B))+1;
+        return (A * Math.pow(ta, B));
     }
 }
