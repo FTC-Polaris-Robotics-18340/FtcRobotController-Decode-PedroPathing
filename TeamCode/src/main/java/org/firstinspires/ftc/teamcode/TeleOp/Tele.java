@@ -13,13 +13,14 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.function.Supplier;
 @Configurable
-@TeleOp (name = "testTele")
+@TeleOp (name = "test")
 public class Tele extends OpMode {
     private Follower follower;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
@@ -45,6 +46,7 @@ public class Tele extends OpMode {
                 .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
                 .build();
         BR = hardwareMap.get(DcMotor.class, "BR");
+        //BR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setPower(0);
 
