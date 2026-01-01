@@ -23,14 +23,27 @@ public class AutoTest3 extends OpMode {
         //START POSIITON
         //Drive > MOVEMENT STATE
         //SHOOT > ATTEMPT TO SCORE THE ARTIFACT
-        DRIVE_STARTPOS_SHOOT_POS,
-        SHOOT_PRELOAD,
+        DRIVE_STARTPOS_SHOOTPOS,
 
-        DRIVE_SHOOTPOS_ALIGNPOS,
 
-        DRIVE_ALIGNPOS_PICK1,
+        DRIVE_SHOOTPOS_ALIGN1,
 
-        DRIVE_PICK1_SHOOT_POS,
+        DRIVE_ALIGN1_PICK1,
+
+        DRIVE_PICK1_SHOOTPOS,
+
+        DRIVE_SHOOTPOS_ALIGN2,
+
+        DRIVE_ALIGN2_PICK2,
+
+        DRIVE_PICK2_SHOOTPOS,
+
+        DRIVE_SHOOTPOS_ALIGN3,
+
+        DRIVE_ALIGN3_PICK3,
+
+        DRIVE_PICK3_SHOOTPOS,
+
 
         DONE
 
@@ -39,11 +52,20 @@ public class AutoTest3 extends OpMode {
     PathState pathState;
 
     private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
-    private final Pose shootPose = new Pose(56, 85, Math.toRadians(135)); //y:100
 
-    private final Pose alignPose = new Pose(56, 78, Math.toRadians(183));//183
+    private final Pose shootPose = new Pose(56, 135, Math.toRadians(90)); //y:100
 
-    private final Pose pick1Pose = new Pose(35, 78, Math.toRadians(183));//183
+    private final Pose alignPose = new Pose(56, 78, Math.toRadians(180));//183
+
+    private final Pose pick1Pose = new Pose(35, 78, Math.toRadians(180));//183
+
+    private final Pose align2pose = new Pose(48, 54, Math.toRadians(180));//y = 60
+
+    private final Pose pick2Pose = new Pose(35, 54, Math.toRadians(180));//y = 60
+
+    private final Pose align3pose = new Pose(48, 30, Math.toRadians(180));//y = 60
+
+    private final Pose pick3Pose = new Pose(35, 30, Math.toRadians(180));//y = 60
 
 
 
@@ -51,7 +73,12 @@ public class AutoTest3 extends OpMode {
 
 
 
-    private PathChain driveStartPosShootPos, driveShootPosAlignPos, driveAlignPosPick1, drivePick1ShootPos;
+
+
+    private PathChain driveStartPosShootPos,
+            driveShootPosAlign1, driveAlign1Pick1, drivePick1ShootPos,
+            driveShootPosAlign2, driveAlign2Pick2, drivePick2ScorePos,
+            driveShootPosAlign3, driveAlign3Pick3, drivePick3ScorePos;
 
     public void buildPaths(){
         driveStartPosShootPos = follower.pathBuilder()
@@ -59,12 +86,12 @@ public class AutoTest3 extends OpMode {
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
                 .build();
 
-        driveShootPosAlignPos = follower.pathBuilder()
+        driveShootPosAlign1 = follower.pathBuilder()
                 .addPath(new BezierLine(shootPose, alignPose))
                 .setLinearHeadingInterpolation(shootPose.getHeading(), alignPose.getHeading())
                 .build();
 
-        driveAlignPosPick1 = follower.pathBuilder()
+        driveAlign1Pick1 = follower.pathBuilder()
 
                 .addPath(new BezierLine(alignPose, pick1Pose))
                 .setLinearHeadingInterpolation(alignPose.getHeading(), pick1Pose.getHeading())
@@ -75,37 +102,103 @@ public class AutoTest3 extends OpMode {
                 .setLinearHeadingInterpolation(pick1Pose.getHeading(), shootPose.getHeading())
                 .build();
 
+        driveShootPosAlign2 = follower.pathBuilder()
+                .addPath(new BezierLine(shootPose, align2pose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(), align2pose.getHeading())
+                .build();
+
+        driveAlign2Pick2 = follower.pathBuilder()
+                .addPath(new BezierLine(align2pose, pick2Pose))
+                .setLinearHeadingInterpolation(align2pose.getHeading(), pick2Pose.getHeading())
+                .build();
+
+        drivePick2ScorePos  = follower.pathBuilder()
+                .addPath(new BezierLine(pick2Pose, shootPose))
+                .setLinearHeadingInterpolation(pick2Pose.getHeading(), shootPose.getHeading())
+                .build();
+
+        driveShootPosAlign3 = follower.pathBuilder()
+                .addPath(new BezierLine(shootPose, align3pose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(), align3pose.getHeading())
+                .build();
+        driveAlign3Pick3 = follower.pathBuilder()
+                .addPath(new BezierLine(align3pose, pick3Pose))
+                .setLinearHeadingInterpolation(align3pose.getHeading(), pick3Pose.getHeading())
+                .build();
+        drivePick3ScorePos = follower.pathBuilder()
+                .addPath(new BezierLine(pick3Pose, shootPose))
+                .setLinearHeadingInterpolation(pick3Pose.getHeading(), shootPose.getHeading())
+                .build();
+
     }
 
     public void statePathUpdate(){
         switch(pathState){
 
-            case DRIVE_STARTPOS_SHOOT_POS:
+            case DRIVE_STARTPOS_SHOOTPOS:
                 follower.followPath(driveStartPosShootPos, true);
-                setPathState(PathState.DRIVE_SHOOTPOS_ALIGNPOS);
+                setPathState(PathState.DRIVE_SHOOTPOS_ALIGN1);
                 break;
 
-            case DRIVE_SHOOTPOS_ALIGNPOS: //SHOOT_PRELOAD
+            case DRIVE_SHOOTPOS_ALIGN1: //SHOOT_PRELOAD
                 if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 5){
-                    follower.followPath(driveShootPosAlignPos, true);
-                    setPathState(PathState.DRIVE_ALIGNPOS_PICK1);
+                    follower.followPath(driveShootPosAlign1, true);
+                    setPathState(PathState.DRIVE_ALIGN1_PICK1);
                 }
                 break;
 
-            case DRIVE_ALIGNPOS_PICK1:
-                if(!follower.isBusy()){
-                    follower.followPath(driveAlignPosPick1, true);
-                    setPathState(PathState.DRIVE_PICK1_SHOOT_POS);
+            case DRIVE_ALIGN1_PICK1:
+                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2){
+                    follower.followPath(driveAlign1Pick1, true);
+                    setPathState(PathState.DRIVE_PICK1_SHOOTPOS);
                 }
                 break;
 
-            case DRIVE_PICK1_SHOOT_POS:
-                if(!follower.isBusy()){
+            case DRIVE_PICK1_SHOOTPOS:
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2){
                     follower.followPath(drivePick1ShootPos, true);
-                    telemetry.addLine("Reached shootPose");
-                    setPathState(PathState.DONE);
+                    //setPathState(PathState.DRIVE_SHOOTPOS_ALIGN2);
+                    setPathState(PathState.DRIVE_SHOOTPOS_ALIGN2);
+                    break;
                 }
-                break;
+
+
+
+
+            case DRIVE_SHOOTPOS_ALIGN2:
+                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 5){
+                    follower.followPath(driveShootPosAlign2, true);
+                    setPathState(PathState.DRIVE_ALIGN2_PICK2);
+                    break;
+                }
+
+
+            case DRIVE_ALIGN2_PICK2:
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2){
+                    follower.followPath(driveAlign2Pick2, true);
+                    setPathState(PathState.DRIVE_PICK2_SHOOTPOS);
+                    break;
+                }
+                /*
+
+
+
+            case DRIVE_PICK2_SHOOTPOS :
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2){
+                    follower.followPath(drivePick2ScorePos, true);
+                    setPathState(PathState.DONE);
+                    break;
+                }
+
+                 */
+
+
+
+
+
+
+
+
             case DONE:
                 telemetry.addLine("DONE");
 
@@ -116,34 +209,6 @@ public class AutoTest3 extends OpMode {
         }
     }
 
-
-    /*
-
-    public void statePathUpdate(){
-        switch(pathState){
-            case DRIVE_STARTPOS_SHOOT_POS:
-                follower.followPath(driveStartPosShootPos, true);
-                setPathState(PathState.SHOOT_PRELOAD); //reset time and make new state
-                break;
-            case SHOOT_PRELOAD:
-
-                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 5){
-                    follower.followPath(driveShootPosAlignPos, true);
-                    setPathState(PathState.DRIVE_SHOOTPOS_ALIGNPOS);
-                }
-                break;
-            case DRIVE_SHOOTPOS_ALIGNPOS:
-                //all done
-                if(!follower.isBusy()){
-                    telemetry.addLine("Done all paths");
-                }
-            default:
-                telemetry.addLine("No State Commanded");
-                break;
-        }
-    }
-    */
-
     public void setPathState(PathState newState){
         pathState = newState;
         pathTimer.resetTimer();
@@ -151,7 +216,7 @@ public class AutoTest3 extends OpMode {
 
     @Override
     public void init(){
-        pathState = PathState.DRIVE_STARTPOS_SHOOT_POS;
+        pathState = PathState.DRIVE_STARTPOS_SHOOTPOS;
         pathTimer = new Timer();
         opModeTimer = new Timer();
         opModeTimer.resetTimer();
