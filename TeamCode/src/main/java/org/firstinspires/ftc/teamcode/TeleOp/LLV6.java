@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name = "LL_AprilTagTurret_SmoothFast")
+@TeleOp(name = "LL_V6")
 public class LLV6 extends OpMode {
 
     private Limelight3A limelight;
@@ -25,12 +25,12 @@ public class LLV6 extends OpMode {
     /* =========================
        TURNT CONTROL TUNING
        ========================= */
-    private static final double YAW_KP = 1.05;          // slightly lower for stability
+    private static final double YAW_KP = 0.95;    //1     // slightly lower for stability
     private static final double YAW_KD = 0.03;          // derivative only for large errors
     private static final double MAX_YAW_VEL = 0.1;      // fast snap far away
     private static final double MIN_YAW_VEL = 0.002;    // smooth at small errors
     private static final double TX_FILTER_ALPHA = 0.18; // stronger smoothing
-    private static final double LOCK_ERROR = 0.01;      // deadzone near zero
+    private static final double LOCK_ERROR = 0.04;  //0.03    // deadzone near zero
 
     /* =========================
        HOOD SETTINGS
