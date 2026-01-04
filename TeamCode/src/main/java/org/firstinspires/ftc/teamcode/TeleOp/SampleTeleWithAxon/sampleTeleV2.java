@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.SampleTeleWithAxon;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "sampleTeleFull")
-public class sampleTele_withYaw_V2 extends OpMode {
+@TeleOp(name = "sampleTele2")
+public class sampleTeleV2 extends OpMode {
 
     // Flywheel motor
     private DcMotorEx flywheelMotor;
@@ -156,4 +156,3 @@ public class sampleTele_withYaw_V2 extends OpMode {
         return Math.max(min, Math.min(max, value));
     }
 }
-

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp; // MAIN ONE LLV6
+package org.firstinspires.ftc.teamcode.TeleOp.LimelightTests; // MAIN ONE LLV6
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -25,11 +25,11 @@ public class LLV6 extends OpMode {
     /* =========================
        TURNT CONTROL TUNING
        ========================= */
-    private static final double YAW_KP = 0.95;    //1     // slightly lower for stability
+    private static final double YAW_KP = 0.1;    //1     // slightly lower for stability
     private static final double YAW_KD = 0.03;          // derivative only for large errors
     private static final double MAX_YAW_VEL = 0.1;      // fast snap far away
     private static final double MIN_YAW_VEL = 0.002;    // smooth at small errors
-    private static final double TX_FILTER_ALPHA = 0.18; // stronger smoothing
+    private static final double TX_FILTER_ALPHA = 0.20; // stronger smoothing
     private static final double LOCK_ERROR = 0.04;  //0.03    // deadzone near zero
 
     /* =========================

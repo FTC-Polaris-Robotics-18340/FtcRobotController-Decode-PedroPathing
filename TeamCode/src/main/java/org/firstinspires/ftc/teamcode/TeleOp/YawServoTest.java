@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Yaw Servo Test")
 public class YawServoTest extends OpMode {
 
-    private Servo hood;
+    private Servo yawServo;
 
     @Override
     public void init() {
-        hood = hardwareMap.get(Servo.class, "hood");
+        yawServo = hardwareMap.get(Servo.class, "YawServo");
         telemetry.addLine("Init complete. Ready to test.");
         telemetry.update();
-        hood.setPosition(0.0);
+        yawServo.setPosition(0.0);
     }
 
     @Override
@@ -28,19 +28,19 @@ public class YawServoTest extends OpMode {
     public void loop() {
 
         // Move to full left
-        hood.setPosition(0.0);
+        yawServo.setPosition(0.0);
         telemetry.addData("Yaw Servo Pos", 0.0);
         telemetry.update();
         sleep(5000); // pause for 1 second
 
         // Move to full right
-        hood.setPosition(1.0);
+        yawServo.setPosition(1.0);
         telemetry.addData("Yaw Servo Pos", 1.0);
         telemetry.update();
         sleep(5000); // pause for 1 second
 
         // Move to center
-        hood.setPosition(0.5);
+        yawServo.setPosition(0.5);
         telemetry.addData("Yaw Servo Pos", 0.5);
         telemetry.update();
         sleep(5000); // pause for 1 second

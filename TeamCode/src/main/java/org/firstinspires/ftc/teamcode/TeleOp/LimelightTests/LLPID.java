@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.LimelightTests;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name = "LL_V4")
-public class LLV4 extends OpMode {
+@TeleOp(name = "LLV3")
+public class LLPID extends OpMode {
 
     /* =========================
        Hardware
@@ -36,24 +36,18 @@ public class LLV4 extends OpMode {
     private static final double HOOD_MAX = 1.0;
 
     /* =========================
-       PID Constants (Fast + Smooth)
+       PID Constants (STABLE)
        ========================= */
-    private static final double YAW_KP = 0.8;  // slightly stronger for faster snap
+    private static final double YAW_KP = 0.5;
     private static final double YAW_KD = 0.02;
+
     private static final double HOOD_KP = 0.3;
 
     /* =========================
-       Stability / Motion Limits
+       Stability Controls
        ========================= */
     private static final double ERROR_DEADBAND = 0.08;
-    private static final double MAX_SERVO_STEP = 0.04;  // bigger max step → faster
-    private static final double MIN_SERVO_STEP = 0.002;
-
-    /* =========================
-       Filtered Limelight
-       ========================= */
-    private double filteredTx = 0;
-    private static final double TX_ALPHA = 0.7;
+    private static final double MAX_SERVO_STEP = 0.008;
 
     /* =========================
        PID State
@@ -105,14 +99,9 @@ public class LLV4 extends OpMode {
             double ty = -result.getTy();
 
             /* =========================
-               Filter Limelight noise
-               ========================= */
-            filteredTx = TX_ALPHA * filteredTx + (1 - TX_ALPHA) * tx;
-
-            /* =========================
                Normalize errors
                ========================= */
-            double yawError = filteredTx / (YAW_RANGE_DEG / 2.0);
+            double yawError = tx / (YAW_RANGE_DEG / 2.0);
             double hoodError = ty / (HOOD_RANGE_DEG / 2.0);
 
             /* =========================
@@ -128,24 +117,21 @@ public class LLV4 extends OpMode {
             if (yawError == 0) yawDerivative = 0;
             lastYawError = yawError;
 
-            double yawDelta = (YAW_KP * yawError) + (YAW_KD * yawDerivative);
+            double yawDelta =
+                    (YAW_KP * yawError) +
+                            (YAW_KD * yawDerivative);
 
-            /* =========================
-               Exponential distance-based step scaling
-               ========================= */
-            double stepLimit = Math.max(MIN_SERVO_STEP, Math.pow(Math.abs(yawError), 0.7) * MAX_SERVO_STEP);
-            yawDelta = clamp(yawDelta, -stepLimit, stepLimit);
+            yawDelta = clamp(yawDelta, -MAX_SERVO_STEP, MAX_SERVO_STEP);
 
             double yawPos = yawServo.getPosition() + yawDelta;
             yawPos = clamp(yawPos, YAW_MIN, YAW_MAX);
             yawServo.setPosition(yawPos);
 
             /* =========================
-               Hood Control (P only, scaled)
+               Hood Control (P only)
                ========================= */
             double hoodDelta = HOOD_KP * hoodError;
-            double hoodStepLimit = Math.max(MIN_SERVO_STEP, Math.pow(Math.abs(hoodError), 0.7) * MAX_SERVO_STEP);
-            hoodDelta = clamp(hoodDelta, -hoodStepLimit, hoodStepLimit);
+            hoodDelta = clamp(hoodDelta, -MAX_SERVO_STEP, MAX_SERVO_STEP);
 
             double hoodPos = hoodServo.getPosition() + hoodDelta;
             hoodPos = clamp(hoodPos, HOOD_MIN, HOOD_MAX);
@@ -155,7 +141,6 @@ public class LLV4 extends OpMode {
                Telemetry
                ========================= */
             telemetry.addData("Tx", tx);
-            telemetry.addData("Filtered Tx", filteredTx);
             telemetry.addData("Yaw Error", yawError);
             telemetry.addData("Yaw Pos", yawPos);
             telemetry.addData("Hood Pos", hoodPos);
@@ -168,11 +153,9 @@ public class LLV4 extends OpMode {
     }
 
     /* =========================
-       Utility: Clamp a value
+       Utility
        ========================= */
     private double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
 }
-
-
