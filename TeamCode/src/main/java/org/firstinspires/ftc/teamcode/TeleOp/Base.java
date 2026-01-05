@@ -43,7 +43,7 @@ public class Base extends LinearOpMode {
                 Kicker.setPower(0.0);
             }
             if(gamepad1.left_bumper){
-                Kicker.setPower(1.0);
+                Kicker.setPower(-1.0);
                 Shooter.setPower(-1.0);
                 Stopper.setPosition(0.15);
                 Intake.setPower(-1.0);
