@@ -26,7 +26,7 @@ public class Base extends LinearOpMode {
         Hood = hardwareMap.get(Servo.class, "hood");
         Stopper = hardwareMap.get(Servo.class,"stopper" );
         // start servos in a safe (retracted) position
-        Hood.setPosition(0.0);
+        Hood.setPosition(0.9);
         Stopper.setPosition(0.4);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -36,14 +36,14 @@ public class Base extends LinearOpMode {
         while(opModeIsActive()){
             if(gamepad1.right_bumper){
                 Intake.setPower(-1.0);
-                Kicker.setPower(1.0);
+                Kicker.setPower(0.5);
                 Stopper.setPosition(0.4);
             } else {
                 Intake.setPower(0.0);
                 Kicker.setPower(0.0);
             }
             if(gamepad1.left_bumper){
-                Kicker.setPower(-1.0);
+                Kicker.setPower(-0.5);
                 Shooter.setPower(-1.0);
                 Stopper.setPosition(0.15);
                 Intake.setPower(-1.0);
@@ -61,10 +61,10 @@ public class Base extends LinearOpMode {
                 Spinner.setPower(0.0);
             }
 
-            if(gamepad2.dpad_down){
+            if(gamepad2.dpad_up){
                 Hood.setPosition(0.9);
             }
-            if(gamepad2.dpad_up){
+            if(gamepad2.dpad_down){
                 Hood.setPosition(0.0);
             }
 
