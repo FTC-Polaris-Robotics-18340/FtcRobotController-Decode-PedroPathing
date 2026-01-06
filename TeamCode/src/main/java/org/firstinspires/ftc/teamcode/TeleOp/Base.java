@@ -34,7 +34,7 @@ public class Base extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            if(gamepad1.right_bumper){
+            if(gamepad1.right_bumper){ //hold ball
                 Intake.setPower(-1.0);
                 Kicker.setPower(0.5);
                 Stopper.setPosition(0.4);
@@ -42,7 +42,7 @@ public class Base extends LinearOpMode {
                 Intake.setPower(0.0);
                 Kicker.setPower(0.0);
             }
-            if(gamepad1.left_bumper){
+            if(gamepad1.left_bumper) { // kick up and shoot
                 Kicker.setPower(-0.5);
                 Shooter.setPower(-1.0);
                 Stopper.setPosition(0.15);
@@ -53,21 +53,22 @@ public class Base extends LinearOpMode {
                 Kicker.setPower(0.0);
             }
 
-            if (gamepad2.dpad_left) {
+            if (gamepad2.dpad_left) { // turn turret left
                 Spinner.setPower(0.3);
-            }else if(gamepad2.dpad_right){
+            }else if(gamepad2.dpad_right){ // turn turret right
                 Spinner.setPower(-0.3);
             }else{
                 Spinner.setPower(0.0);
             }
 
-            if(gamepad2.dpad_up){
+            if(gamepad2.dpad_up){ // hood up?
                 Hood.setPosition(0.9);
             }
-            if(gamepad2.dpad_down){
+            if(gamepad2.dpad_down){ // hood down?
                 Hood.setPosition(0.0);
             }
 
+            //TODO: turret lock-on & shooting mechanism
 
             telemetry.addData("Motor Power", Intake.getPower());
             telemetry.addData("Spinner Power", Spinner.getPower());
