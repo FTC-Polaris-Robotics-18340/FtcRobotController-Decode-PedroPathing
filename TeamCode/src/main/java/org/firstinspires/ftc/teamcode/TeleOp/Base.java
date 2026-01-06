@@ -34,24 +34,77 @@ public class Base extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            if(gamepad1.right_bumper){ //hold ball
-                Intake.setPower(-1.0);
-                Kicker.setPower(0.5);
-                Stopper.setPosition(0.4);
+            /*if(gamepad1.right_bumper){ //hold ball
+                //Intake.setPower(-1.0);
+                //Kicker.setPower(-1.0);
+                //Stopper.setPosition(0.15);
             } else {
-                Intake.setPower(0.0);
-                Kicker.setPower(0.0);
+                //Intake.setPower(0.0);
+                //Kicker.setPower(0.0);
             }
             if(gamepad1.left_bumper) { // kick up and shoot
-                Kicker.setPower(-0.5);
-                Shooter.setPower(-1.0);
-                Stopper.setPosition(0.15);
+                //Kicker.setPower(-0.5);
+                //Shooter.setPower(-1.0);
+                //Stopper.setPosition(0.15);
+                //Intake.setPower(-1.0);
+            } else {
+                //Shooter.setPower(0.0);
+                //Intake.setPower(0.0);
+                //Kicker.setPower(0.0);
+            }*/
+
+            // ---------------- MAIN WORKING CODE -----------------
+            //bumper functionality
+            //right
+            Intake.setPower((gamepad1.right_bumper || gamepad1.left_bumper) ? 1.0 : 0.0);
+            Kicker.setPower((gamepad1.right_bumper) ? 1.0 : 0.0);
+            double stopPos = 0.15;
+            if (gamepad1.right_bumper) {
+                stopPos = 0.4;
+            }
+            Stopper.setPosition(stopPos);
+
+            //left
+            if (gamepad1.left_bumper) {
+                stopPos = 0.15;
+            }
+            Kicker.setPower(gamepad1.left_bumper ? -0.5 : 0.0);
+            Stopper.setPosition(stopPos);
+            Shooter.setPower(gamepad1.left_bumper ? -1.0 : 0.0);
+
+            //----------------------------------------------------
+
+
+            //Intake.setPower(gamepad1.left_bumper  ? 1.0 : 0.0);
+
+            //single-line intake
+            //Intake.setPower(gamepad1.a  ? 1.0 : 0.0);
+            //single-line stopper
+            //Stopper.setPosition(gamepad1.x ? 0.4 : 0.15);
+            //SL shoot
+            //Shooter.setPower(gamepad1.y ? 1.0 : 0.0);
+            //SL kickr
+            //Kicker.setPower(gamepad1.b ? 1.0 : 0.0);
+            // ----------- TROUBLESHOOTING CONTROLS -----------
+            /*if (gamepad1.a) { //intake
                 Intake.setPower(-1.0);
             } else {
-                Shooter.setPower(0.0);
                 Intake.setPower(0.0);
+            }*/
+            /*if (gamepad1.b) { //kicker
+                Kicker.setPower(-1.0);
+            } else {
                 Kicker.setPower(0.0);
-            }
+            }*/
+            /*if (gamepad1.x) { //stopper
+                Stopper.setPosition(0.4);
+            } else {
+                Stopper.setPosition(0.15);
+            }*/
+            /*if (gamepad1.y) { //shooter
+                Shooter.setPower(-1.0);
+            }*/
+            //----------------------------------------------
 
             if (gamepad2.dpad_left) { // turn turret left
                 Spinner.setPower(0.3);
