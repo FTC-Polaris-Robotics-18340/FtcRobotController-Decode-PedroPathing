@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="baseOp", group = "Examples")
 public class Base extends LinearOpMode {
-    private DcMotor Intake;
-    private DcMotor Spinner;
-    private DcMotor Kicker;
-    private DcMotor Shooter;
+    private DcMotor Intake; //front 3 rows of wheels
+    private DcMotor Spinner; //turret
+    private DcMotor Kicker; // back wheel thing
+    private DcMotor Shooter; //shooter
 
     private Servo Hood;
-    private Servo Stopper;
+    private Servo Stopper; // servo that blocks opening of shooter
 
 
     @Override
