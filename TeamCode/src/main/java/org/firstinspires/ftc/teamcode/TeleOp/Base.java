@@ -10,10 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class Base extends LinearOpMode {
     private DcMotor Intake; //front 3 rows of wheels
     private DcMotor Spinner; //turret
-    private DcMotor Kicker; // back wheel thing
+    //private DcMotor Kicker; // back wheel thing - no longer motor
     private DcMotor Shooter; //shooter
 
     private Servo Hood;
+    private Servo Kicker;
     private Servo Stopper; // servo that blocks opening of shooter
 
 
@@ -21,10 +22,12 @@ public class Base extends LinearOpMode {
     public void runOpMode(){
         Intake = hardwareMap.get(DcMotor.class, "FL");
         Spinner = hardwareMap.get(DcMotor.class, "FR");
-        Kicker = hardwareMap.get(DcMotor.class,"BL" );
+        //Kicker = hardwareMap.get(DcMotor.class,"BL" );
+
         Shooter = hardwareMap.get(DcMotor.class, "BR");
         Hood = hardwareMap.get(Servo.class, "hood");
         Stopper = hardwareMap.get(Servo.class,"stopper" );
+        Kicker = hardwareMap.get(Servo.class, "kicker"); // TODO: ADD TO CONFIG
         // start servos in a safe (retracted) position
         Hood.setPosition(0.9);
         Stopper.setPosition(0.4);
@@ -57,19 +60,24 @@ public class Base extends LinearOpMode {
             //bumper functionality
             //right
             Intake.setPower((gamepad1.right_bumper || gamepad1.left_bumper) ? 1.0 : 0.0);
-            Kicker.setPower((gamepad1.right_bumper) ? 1.0 : 0.0);
+            //Kicker.setPower((gamepad1.right_bumper) ? 1.0 : 0.0);
             double stopPos = 0.15;
+            double kickPos = 0.0; //TODO: ADJUST TO ACTUAL POS
             if (gamepad1.right_bumper) {
                 stopPos = 0.4;
+                kickPos = 1.0;
             }
             Stopper.setPosition(stopPos);
+            Kicker.setPosition(kickPos);
 
             //left
             if (gamepad1.left_bumper) {
                 stopPos = 0.15;
+                kickPos = 0.0; // TODO: ADJUST TO ACTUAL POS
             }
-            Kicker.setPower(gamepad1.left_bumper ? -0.5 : 0.0);
+            //Kicker.setPower(gamepad1.left_bumper ? -0.5 : 0.0);
             Stopper.setPosition(stopPos);
+            Kicker.setPosition(kickPos);
             Shooter.setPower(gamepad1.left_bumper ? -1.0 : 0.0);
 
             //----------------------------------------------------
