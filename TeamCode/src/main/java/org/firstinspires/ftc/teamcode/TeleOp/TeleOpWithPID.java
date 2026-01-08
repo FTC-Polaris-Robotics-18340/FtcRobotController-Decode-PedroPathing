@@ -96,6 +96,25 @@ public class TeleOpWithPID extends LinearOpMode {
 
         while (opModeIsActive()) {
             // ================ BASIC DRIVE =================
+            //setup
+            FL = hardwareMap.get(DcMotor.class, "FL");
+            FR = hardwareMap.get(DcMotor.class, "FR");
+            BL = hardwareMap.get(DcMotor.class, "BL");
+            BR = hardwareMap.get(DcMotor.class, "BR");
+
+            // We set the left motors in reverse which is needed for drive trains where the left
+            // motors are opposite to the right ones.
+            BR.setDirection(DcMotor.Direction.REVERSE);
+            FR.setDirection(DcMotor.Direction.REVERSE);
+
+            // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
+            // wires, you should remove these
+            FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //main work
             double lX = gamepad1.left_stick_x;
             double lY = gamepad1.left_stick_y;
             double rX = gamepad1.right_stick_x;
@@ -132,7 +151,7 @@ public class TeleOpWithPID extends LinearOpMode {
             }
 
             // ===== Kicker (only fires if shooter is ready) =====
-            if (gamepad1.left_bumper && shooterReady) {
+            if (gamepad1.left_bumper /*&& shooterReady*/) {
                 Kicker.setPosition(KICK_FIRE);
             } else {
                 Kicker.setPosition(KICK_REST);

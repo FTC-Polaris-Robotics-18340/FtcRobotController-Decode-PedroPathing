@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+//import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+//import com.arcrobotics.ftclib.gamepad.GamepadEx;
 // using raw gamepad trigger values instead of GamepadKeys.Trigger
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,20 +15,20 @@ import org.firstinspires.ftc.teamcode.Common.TurretServo;
 @TeleOp(name = "testTele")
 public class TeleOpV1 extends LinearOpMode{
     static Robot robot;
-    static MecanumDrive drive;
-    static GamepadEx gamepad1Ex;
-    static GamepadEx gamepad2Ex;
+    //static MecanumDrive drive;
+    //static GamepadEx gamepad1Ex;
+    //static GamepadEx gamepad2Ex;
     static TurretServo turretServo;
     Servo hoodServo;
     private void HardwareStart() {
         robot = new Robot(hardwareMap);
-        drive = new MecanumDrive(robot.FrontLeft, robot.FrontRight, robot.BackLeft, robot.BackRight);
+        //drive = new MecanumDrive(robot.FrontLeft, robot.FrontRight, robot.BackLeft, robot.BackRight);
         turretServo = new TurretServo(hardwareMap);
 
         hoodServo = hardwareMap.get(Servo.class, "hood");
        
-        gamepad1Ex = new GamepadEx(gamepad1);
-        gamepad2Ex = new GamepadEx(gamepad2);
+        //gamepad1Ex = new GamepadEx(gamepad1);
+        //gamepad2Ex = new GamepadEx(gamepad2);
     }
     public void runOpMode() throws InterruptedException {
         HardwareStart();
@@ -41,12 +41,12 @@ public class TeleOpV1 extends LinearOpMode{
         boolean prevA = false;
 
         while(opModeIsActive()){
-            drive.driveRobotCentric(
+            /*drive.driveRobotCentric(
                     gamepad1Ex.getLeftX(),
                     gamepad1Ex.getLeftY(),
                     gamepad1Ex.getRightX(),
                     true
-            );
+            );*/
 
             double outPower = gamepad1.left_trigger;  // left trigger controls shooter power
 
