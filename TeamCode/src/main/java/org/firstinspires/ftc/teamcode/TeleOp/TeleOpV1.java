@@ -20,9 +20,6 @@ public class TeleOpV1 extends LinearOpMode{
     static GamepadEx gamepad2Ex;
     static TurretServo turretServo;
     Servo hoodServo;
-
-
-
     private void HardwareStart() {
         robot = new Robot(hardwareMap);
         drive = new MecanumDrive(robot.FrontLeft, robot.FrontRight, robot.BackLeft, robot.BackRight);
@@ -33,7 +30,6 @@ public class TeleOpV1 extends LinearOpMode{
         gamepad1Ex = new GamepadEx(gamepad1);
         gamepad2Ex = new GamepadEx(gamepad2);
     }
-
     public void runOpMode() throws InterruptedException {
         HardwareStart();
         waitForStart();
@@ -65,14 +61,10 @@ public class TeleOpV1 extends LinearOpMode{
                 telemetry.addData("shooter_pidf", robot.shooter.getPIDFCoefficientsString());
             } catch (Exception ignored) {}
 
-
             turretServo.Turret.setPosition(0.7);
             hoodServo.setPosition(0.7);
 
-
             telemetry.update();
-
-            
         }
     }
 }
