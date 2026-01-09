@@ -104,33 +104,6 @@ public class AutoTest2 extends OpMode {
     }
 
 
-    /*
-
-    public void statePathUpdate(){
-        switch(pathState){
-            case DRIVE_STARTPOS_SHOOT_POS:
-                follower.followPath(driveStartPosShootPos, true);
-                setPathState(PathState.SHOOT_PRELOAD); //reset time and make new state
-                break;
-            case SHOOT_PRELOAD:
-
-                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 5){
-                    follower.followPath(driveShootPosAlignPos, true);
-                    setPathState(PathState.DRIVE_SHOOTPOS_ALIGNPOS);
-                }
-                break;
-            case DRIVE_SHOOTPOS_ALIGNPOS:
-                //all done
-                if(!follower.isBusy()){
-                    telemetry.addLine("Done all paths");
-                }
-            default:
-                telemetry.addLine("No State Commanded");
-                break;
-        }
-    }
-    */
-
     public void setPathState(PathState newState){
         pathState = newState;
         pathTimer.resetTimer();

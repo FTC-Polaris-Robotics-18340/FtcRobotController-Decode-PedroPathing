@@ -17,12 +17,14 @@ public class TeleOpWithPID extends LinearOpMode {
     private Servo Kicker;
     private Servo Stopper;
     private Servo Hood;
+    private MecanumDrive drive;
+    private DcMotor FL, FR, BL, BR;
 
-    // ===== Shooter tuning =====
-    private static final double TARGET_VELOCITY = 1500;   // ticks/sec
+    //Shooter tuning
+    private static final double TARGET_VELOCITY = 500; //1500
     private static final double VELOCITY_TOLERANCE = 50;  // allowed error
 
-    // PIDF (from tuner)
+    // PIDF
     private static final double P = 286.1;
     private static final double I = 0;
     private static final double D = 0;
@@ -37,6 +39,15 @@ public class TeleOpWithPID extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        // Drivetrain hardware
+        FL = hardwareMap.get(DcMotor.class, "FL");
+        FR = hardwareMap.get(DcMotor.class, "FR");
+        BL = hardwareMap.get(DcMotor.class, "BL");
+        BR = hardwareMap.get(DcMotor.class, "BR");
+
+        // Initialize MecanumDrive
+        drive = new MecanumDrive(FL, FR, BL, BR);
 
         Intake  = hardwareMap.get(DcMotor.class, "intake");
 
@@ -55,21 +66,25 @@ public class TeleOpWithPID extends LinearOpMode {
         Stopper.setPosition(STOPPER_BLOCK);
         Kicker.setPosition(KICK_REST);
 
-        telemetry.addLine("PID Shooter Ready");
+        telemetry.addLine("Ready");
         telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
+            double forward = -gamepad1.left_stick_y;   // forward/backward
+            double strafe  = gamepad1.left_stick_x;    // left/right
+            double rotate  = gamepad1.right_stick_x;   // rotation
+            drive.drive(forward, strafe, rotate);
 
-            /* ===== Intake ===== */
+            //Intake
             if (gamepad1.left_trigger > 0.1) {
                 Intake.setPower(1.0);
             } else {
                 Intake.setPower(0.0);
             }
 
-            /* ===== Shooter spin-up ===== */
+            //Shooter spin-up
             if (gamepad1.right_trigger > 0.1) {
                 Shooter.setVelocity(TARGET_VELOCITY);
                 Stopper.setPosition(STOPPER_OPEN);
@@ -78,7 +93,7 @@ public class TeleOpWithPID extends LinearOpMode {
                 Stopper.setPosition(STOPPER_BLOCK);
             }
 
-            /* ===== Velocity check ===== */
+            //Velocity check
             double currentVelocity = Shooter.getVelocity();
             double velocityError = Math.abs(TARGET_VELOCITY - currentVelocity);
 
@@ -89,14 +104,14 @@ public class TeleOpWithPID extends LinearOpMode {
                 shooterReady = false;
             }
 
-            /* ===== Kicker (only fires if shooter is ready) ===== */
+            //Kicker (only fires if shooter is ready)
             if (gamepad1.left_bumper && shooterReady) {
                 Kicker.setPosition(KICK_FIRE);
             } else {
                 Kicker.setPosition(KICK_REST);
             }
 
-            /* ===== Telemetry ===== */
+            //Telemetry
             telemetry.addData("Target Vel", TARGET_VELOCITY);
             telemetry.addData("Current Vel", "%.1f", currentVelocity);
             telemetry.addData("Error", "%.1f", velocityError);
