@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+@Disabled
 @TeleOp(name="baseOpV2", group = "Examples")
 public class base2 extends LinearOpMode {
     private DcMotor Intake; //front 3 rows of wheels

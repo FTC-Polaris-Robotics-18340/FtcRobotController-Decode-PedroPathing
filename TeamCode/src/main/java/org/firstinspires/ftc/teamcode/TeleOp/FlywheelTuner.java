@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,7 +28,7 @@ public class FlywheelTuner extends OpMode {
 
     @Override
     public void init() {
-        flywheelMotor = hardwareMap.get(DcMotorEx.class, "Sp");
+        flywheelMotor = hardwareMap.get(DcMotorEx.class, "shooter");
         flywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // flywheelMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 

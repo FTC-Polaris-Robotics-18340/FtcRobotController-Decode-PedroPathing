@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.TeleOp.LimelightTests; //MAIN ONE LLV5
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-
+@Disabled
 @TeleOp(name = "LLV5")
 public class LLV5 extends OpMode {
 

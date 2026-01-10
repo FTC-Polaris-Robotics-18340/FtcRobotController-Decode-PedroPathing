@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name="MainTeleOp")
+@TeleOp(name="MainTeleop")
 public class TeleOpWithPID extends LinearOpMode {
 
     private DcMotor Intake;
@@ -36,6 +38,14 @@ public class TeleOpWithPID extends LinearOpMode {
 
     private static final double KICK_REST = 0.0;
     private static final double KICK_FIRE = 1.0;
+    private static final double AUTO_SPEED = 0.6;
+    private static final long AUTO_INTERVAL_MS = 4000; // time per direction
+
+    private boolean autoForward = true;
+    private long lastSwitchTime = 0;
+
+
+    private static final double STRAIGHT_SPEED = 1;
 
     @Override
     public void runOpMode() {
@@ -46,8 +56,10 @@ public class TeleOpWithPID extends LinearOpMode {
         BL = hardwareMap.get(DcMotor.class, "BL");
         BR = hardwareMap.get(DcMotor.class, "BR");
 
+
+
         // Initialize MecanumDrive
-        drive = new MecanumDrive(FL, FR, BL, BR);
+        //drive = new MecanumDrive(FL, FR, BL, BR);
 
         Intake  = hardwareMap.get(DcMotor.class, "intake");
 
@@ -75,7 +87,7 @@ public class TeleOpWithPID extends LinearOpMode {
             double forward = -gamepad1.left_stick_y;   // forward/backward
             double strafe  = gamepad1.left_stick_x;    // left/right
             double rotate  = gamepad1.right_stick_x;   // rotation
-            drive.drive(forward, strafe, rotate);
+            //drive.drive(forward, strafe, rotate);
 
             //Intake
             if (gamepad1.left_trigger > 0.1) {
@@ -105,10 +117,23 @@ public class TeleOpWithPID extends LinearOpMode {
             }
 
             //Kicker (only fires if shooter is ready)
-            if (gamepad1.left_bumper && shooterReady) {
+            if (shooterReady) { //gamepad1.left_bumper &&
                 Kicker.setPosition(KICK_FIRE);
             } else {
                 Kicker.setPosition(KICK_REST);
+            }
+
+
+            if (gamepad1.right_bumper) {
+
+               // drive.drive(STRAIGHT_SPEED, 0.0, 0.0);
+
+            } else if (gamepad1.left_bumper){
+                //drive.drive(-STRAIGHT_SPEED, 0.0, 0.0);
+            }
+
+            else {
+                //drive.drive(forward, strafe, rotate);
             }
 
             //Telemetry
