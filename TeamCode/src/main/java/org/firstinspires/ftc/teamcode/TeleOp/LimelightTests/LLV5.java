@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-@Disabled
+
 @TeleOp(name = "LLV5")
 public class LLV5 extends OpMode {
 
@@ -66,7 +66,7 @@ public class LLV5 extends OpMode {
         );
         imu.initialize(new IMU.Parameters(orientation));
 
-        yawServo = hardwareMap.get(Servo.class, "YawServo");
+        yawServo = hardwareMap.get(Servo.class, "turret");
         hoodServo = hardwareMap.get(Servo.class, "hood");
 
         yawServo.setPosition(YAW_CENTER);

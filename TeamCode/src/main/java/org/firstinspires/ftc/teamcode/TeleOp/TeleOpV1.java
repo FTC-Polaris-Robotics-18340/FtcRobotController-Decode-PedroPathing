@@ -20,7 +20,7 @@ public class TeleOpV1 extends LinearOpMode{
     static GamepadEx gamepad1Ex;
     static GamepadEx gamepad2Ex;
 
-    private static double targetVelocity = 500; //CONSTANT VALUE FOR NOW, will be changed after regression
+    private static double targetVelocity = 1500; //CONSTANT VALUE FOR NOW, will be changed after regression
     private static double velocityTolerance = 50;
     Servo hoodServo;
     private void HardwareStart() {
@@ -32,7 +32,7 @@ public class TeleOpV1 extends LinearOpMode{
 
         robot.Kicker.setPosition(0.0);
         robot.Stopper.setPosition(1.0);
-        robot.Hood.setPosition(0.0);
+        robot.Hood.setPosition(1.0);
     }
     public void runOpMode() throws InterruptedException {
         HardwareStart();
@@ -80,33 +80,49 @@ public class TeleOpV1 extends LinearOpMode{
                 drive.driveWithMotorPowers(0.0, 0.0, 0.0, 1.0);
             }
 
-            double kickPos = 0.0;
+            /*
+
+
             if (gamepad1.right_bumper) {
-                kickPos = 1.0;
+                robot.Kicker.setPosition(1.0);
+            }else{
+                robot.Kicker.setPosition(0.0);
             }
-            robot.Kicker.setPosition(kickPos);
 
-            double stopPos = 0.0;
+
             if (gamepad1.left_bumper){
-                stopPos = 1.0;
+                robot.Stopper.setPosition(1.0);
             }
-            robot.Stopper.setPosition(stopPos);
+            else{
+                robot.Stopper.setPosition(0.0);
+            }
 
-            double hoodPos = 0.0;
+             */
+
+
+
             if (gamepad1.dpad_down) {
-                hoodPos = 1.0;
+                robot.Hood.setPosition(1.0);
+            }else{
+                robot.Hood.setPosition(0.0);
             }
-            robot.Hood.setPosition(hoodPos);
+
 
             double currentVelocity = robot.Shooter.getVelocity();
             double velocityError = Math.abs(targetVelocity - currentVelocity);
 
             boolean shooterReady;
+
+
+
+
             if (velocityError < velocityTolerance) {
                 shooterReady = true;
             } else {
                 shooterReady = false;
             }
+
+
 
             //Kicker (only fires if shooter is ready)
             if (shooterReady) {
@@ -114,6 +130,8 @@ public class TeleOpV1 extends LinearOpMode{
             } else {
                 robot.Kicker.setPosition(0.0); //does not kick
             }
+
+
 
 
 

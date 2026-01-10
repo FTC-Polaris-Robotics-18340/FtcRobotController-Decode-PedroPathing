@@ -57,7 +57,7 @@ public class LLNewV1 extends OpMode {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0); // AprilTag pipeline
 
-        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor");
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turret");
         turretMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         turretMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Disabled
 @Autonomous(name = "Example Auto 2")
-public class AutoTest_V extends OpMode {
+public class AutoTest1 extends OpMode {
     private Follower follower;
 
     private Timer pathTimer, actionTimer, opmodeTimer;

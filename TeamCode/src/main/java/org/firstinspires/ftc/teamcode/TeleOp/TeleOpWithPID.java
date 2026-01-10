@@ -96,7 +96,6 @@ public class TeleOpWithPID extends LinearOpMode {
                 Intake.setPower(0.0);
             }
 
-            //Shooter spin-up
             if (gamepad1.right_trigger > 0.1) {
                 Shooter.setVelocity(TARGET_VELOCITY);
                 Stopper.setPosition(STOPPER_OPEN);
