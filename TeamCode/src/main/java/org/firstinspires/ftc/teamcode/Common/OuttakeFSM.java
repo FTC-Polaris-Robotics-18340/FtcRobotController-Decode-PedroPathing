@@ -199,7 +199,7 @@ public class OuttakeFSM {
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         limelight.updateRobotOrientation(angles.getYaw());
 
-        telemetry.addData("Result Valid", limelight.getLatestResult().isValid());
+        telemetry.addData("Result Valid", limelight.getLatestResult() != null && limelight.getLatestResult().isValid());
 
         //telemetry.addData("Filtered Tx", filteredTx);
         //telemetry.addData("Yaw Error", yawError);
@@ -224,6 +224,8 @@ public class OuttakeFSM {
     public FlywheelState getState() {
         return flywheelState;
     }
+
+
 
     /* =========================
        Utility
