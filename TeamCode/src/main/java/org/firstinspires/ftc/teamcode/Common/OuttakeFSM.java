@@ -48,7 +48,6 @@ public class OuttakeFSM {
     private static final double KICK_IN = 0.2;
 
     private static final double TARGET_VELOCITY = 1500;
-    private static double targetVelocity = TARGET_VELOCITY;
 
     /* Turret PID (from LLNewV1 style) */
     private static final double KP = 0.9;
@@ -79,6 +78,9 @@ public class OuttakeFSM {
         turret = hwMap.get(DcMotorEx.class, "turret");
         intake  = hwMap.get(DcMotorEx.class, "intake");
         limelight = hwMap.get(Limelight3A.class, "limelight");
+
+        shooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(285, 0, 0, 18.2));
+        shooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         stopper.setPosition(GATE_CLOSED);
         kicker.setPosition(KICK_IN);
@@ -141,10 +143,10 @@ public class OuttakeFSM {
                 break;
 
             case SPIN_UP:
-                shooter.setVelocity(targetVelocity);
+                shooter.setVelocity(TARGET_VELOCITY);
                 shooter.setPower(1);
 
-                if (shooter.getVelocity() >= targetVelocity - 50) {
+                if (shooter.getVelocity() >= TARGET_VELOCITY - 50) {
                     stateTimer.reset();
                     flywheelState = FlywheelState.OPEN_STOPPER_KICK;
                 }

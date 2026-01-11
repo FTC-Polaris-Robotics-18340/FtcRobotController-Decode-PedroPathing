@@ -163,7 +163,7 @@ public class auto extends OpMode {
     }
 
     public void statePathUpdate(){
-        switch(pathState){
+        switch (pathState){
 
         }
     }
