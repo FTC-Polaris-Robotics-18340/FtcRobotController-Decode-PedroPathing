@@ -37,14 +37,14 @@ public class TeleOpV2 extends LinearOpMode {
     private DcMotorEx turretMotor;
     private IMU imu;
 
-    private static final double KP = 0.9;
-    private static final double KD = 0.015;
+    private static final double KP = 1.2;
+    private static final double KD = 0.00;//0
 
-    private static final double MAX_POWER = 0.6;
+    private static final double MAX_POWER = 1;
     private static final double MIN_POWER = 0.02;
     private static final double LOCK_ERROR = 0.015;
 
-    private static final double TX_FILTER_ALPHA = 0.25;
+    private static final double TX_FILTER_ALPHA = 0.3;//0.25
 
     private static final double LIMELIGHT_HEIGHT = 11.25;
     private static final double TAG_HEIGHT = 29.5;
@@ -129,12 +129,14 @@ public class TeleOpV2 extends LinearOpMode {
 
             /* =========================
                HOOD
-               ========================= */
+               =========================
             if (gamepad1.dpad_down) {
                 robot.Hood.setPosition(1.0);
             } else {
                 robot.Hood.setPosition(0.0);
             }
+
+             */
 
             /* =========================
                SHOOTER READY
@@ -167,7 +169,7 @@ public class TeleOpV2 extends LinearOpMode {
                 filteredTx +=
                         TX_FILTER_ALPHA * (rawTx - filteredTx);
 
-                double yawError = filteredTx / 90.0;
+                double yawError = filteredTx/90 ;
 
                 if (Math.abs(yawError) < LOCK_ERROR) {
                     turretMotor.setPower(0);

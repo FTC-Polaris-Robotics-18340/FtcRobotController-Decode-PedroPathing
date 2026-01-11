@@ -4,9 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.util.Timer;
 
@@ -15,7 +13,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 @Autonomous (name = "practice auto extended")
-public class auto extends OpMode {
+public class Auto_V1 extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, opModeTimer;
@@ -27,29 +25,13 @@ public class auto extends OpMode {
 
 
     public enum PathState {
-        DRIVE_STARTPOS_SHOOTPOS,
-
-
-        DRIVE_SHOOTPOS_ALIGN1,
-
-        DRIVE_ALIGN1_PICK1,
-
-        DRIVE_PICK1_SHOOTPOS,
-
-        DRIVE_SHOOTPOS_ALIGN2,
-
-        DRIVE_ALIGN2_PICK2,
-
-        DRIVE_PICK2_SHOOTPOS,
-
-        DRIVE_SHOOTPOS_ALIGN3,
-
-        DRIVE_ALIGN3_PICK3,
-
-        DRIVE_PICK3_SHOOTPOS,
-
+        DRIVESTARTALIGN1,
+        DRIVEALIGN1PICK1, DRIVEPICK1SHOOT, DRIVESHOOTALIGN2,DRIVEALIGN2PICK2,
+        DRIVEPICK2SHOOT, DRIVESHOOTALIGN3, DRIVEALIGN3PICK3,
+        DRIVEPICK3SHOOT,
 
         DONE
+        ;
 
     }
 
@@ -164,6 +146,65 @@ public class auto extends OpMode {
 
     public void statePathUpdate(){
         switch (pathState){
+            case DRIVESTARTALIGN1:
+                follower.followPath(driveStartToAlign1, true);
+                setPathState(PathState.DRIVEALIGN1PICK1);
+                break;
+            case DRIVEALIGN1PICK1:
+                if (!follower.isBusy() ){//&& pathTimer.getElapsedTimeSeconds() > 5
+                    follower.followPath(driveAlign1ToPick1, true);
+                    setPathState(PathState.DRIVEPICK1SHOOT);
+                }
+                break;
+            case DRIVEPICK1SHOOT:
+                if (!follower.isBusy() ){
+                    follower.followPath(drivePick1ToShoot, true);
+                    setPathState(PathState.DRIVESHOOTALIGN2);
+                }
+                break;
+            case DRIVESHOOTALIGN2:
+                if (!follower.isBusy() ){
+                    follower.followPath(driveShootToAlign2, true);
+                    setPathState(PathState.DRIVEALIGN2PICK2);
+                }
+                break;
+            case DRIVEALIGN2PICK2:
+                if (!follower.isBusy() ){
+                    follower.followPath(driveAlign2ToPick2, true);
+                    setPathState(PathState.DRIVEPICK2SHOOT);
+                }
+                break;
+            case DRIVEPICK2SHOOT:
+                if (!follower.isBusy() ){
+                    follower.followPath(drivePick2ToShoot, true);
+                    setPathState(PathState.DRIVESHOOTALIGN3);
+                }
+                break;
+            case DRIVESHOOTALIGN3:
+                if (!follower.isBusy() ){
+                    follower.followPath(driveShootToAlign3, true);
+                    setPathState(PathState.DRIVEALIGN3PICK3);
+                }
+                break;
+            case DRIVEALIGN3PICK3:
+                if (!follower.isBusy() ){
+                    follower.followPath(driveAlign3ToPick3, true);
+                    setPathState(PathState.DRIVEPICK3SHOOT);
+                }
+                break;
+            case DRIVEPICK3SHOOT:
+                if (!follower.isBusy() ){
+                    follower.followPath(drivePick3ToShoot, true);
+                    setPathState(PathState.DONE);
+                }
+                break;
+            case DONE:
+                telemetry.addLine("DONE");
+
+
+            default:
+                telemetry.addLine("No State Commanded");
+                break;
 
         }
     }
@@ -175,7 +216,7 @@ public class auto extends OpMode {
 
     @Override
     public void init(){
-        pathState = PathState.DRIVE_STARTPOS_SHOOTPOS;
+        pathState = PathState.DRIVESTARTALIGN1;
         pathTimer = new Timer();
         opModeTimer = new Timer();
         opModeTimer.resetTimer();

@@ -120,13 +120,16 @@ public class OuttakeFSM {
                 }
                 break;
 
+
             case TAG_LOCK:
                 LLResult result = limelight.getLatestResult();
+                final double TIMEOUT = 2.0;
 
                 if (result != null && result.isValid()) {
-                    double rawTx = -result.getTx(); // invert if turret moves wrong way
+                    double rawTx = -result.getTx();
                     filteredTx += TX_FILTER_ALPHA * (rawTx - filteredTx);
                     yawError = filteredTx / 90.0;
+
                     if (Math.abs(yawError) < LOCK_ERROR) {
                         turret.setPower(0);
                         lastYawError = 0;
@@ -147,15 +150,17 @@ public class OuttakeFSM {
                         power = clamp(power, -speedLimit, speedLimit);
                         turret.setPower(power);
                     }
-                    ty = result.getTy();
-                    distance =
-                            (TAG_HEIGHT - LIMELIGHT_HEIGHT) /
-                                    Math.tan(Math.toRadians(LIMELIGHT_ANGLE + ty));
 
+                    ty = result.getTy();
+                    distance = (TAG_HEIGHT - LIMELIGHT_HEIGHT) /
+                            Math.tan(Math.toRadians(LIMELIGHT_ANGLE + ty));
+                    stateTimer.reset();
                 } else {
                     turret.setPower(0);
+                    if (stateTimer.seconds() > TIMEOUT) {
+                        flywheelState = FlywheelState.SPIN_UP;
+                    }
                 }
-
                 break;
 
             case SPIN_UP:

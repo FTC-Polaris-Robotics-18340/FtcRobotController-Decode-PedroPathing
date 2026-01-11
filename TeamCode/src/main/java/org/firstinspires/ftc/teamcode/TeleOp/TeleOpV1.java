@@ -30,7 +30,7 @@ public class TeleOpV1 extends LinearOpMode{
         gamepad1Ex = new GamepadEx(gamepad1);
         gamepad2Ex = new GamepadEx(gamepad2);
 
-        robot.Kicker.setPosition(0.0);
+        robot.Kicker.setPosition(1.0);
         robot.Stopper.setPosition(1.0);
         robot.Hood.setPosition(1.0);
     }
@@ -87,14 +87,15 @@ public class TeleOpV1 extends LinearOpMode{
 
 
 
-/*
 
+ /*
 
             if (gamepad1.right_bumper) {
                 robot.Kicker.setPosition(1.0);
             }else{
-                robot.Kicker.setPosition(0.0);
+                robot.Kicker.setPosition(0.2);
             }
+
 
 
             if (gamepad1.left_bumper){
@@ -105,12 +106,15 @@ public class TeleOpV1 extends LinearOpMode{
             }
 
            */
+            /*
 
             if (gamepad1.dpad_down) {
                 robot.Hood.setPosition(1.0);
             }else{
                 robot.Hood.setPosition(0.0);
             }
+
+             */
 
 
 
@@ -131,12 +135,16 @@ public class TeleOpV1 extends LinearOpMode{
 
 
             //Kicker (only fires if shooter is ready)
+
+            /*
             if (shooterReady) {
-                robot.Kicker.setPosition(1.0); //kicks ball up
+                robot.Kicker.setPosition(0.0); //kicks ball up
             } else {
-                robot.Kicker.setPosition(0.0); //does not kick
+                robot.Kicker.setPosition(1.0); //does not kick
             }
 
+
+             */
 
 
 
