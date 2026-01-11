@@ -38,22 +38,22 @@ public class OuttakeFSM {
     /* =========================
        Constants
        ========================= */
-    private static final double FLYWHEEL_POWER = 1.0;
-    private static final double SPINUP_TIME = 2.0;
+
+
 
     private static final double GATE_OPEN = 0.6;
     private static final double GATE_CLOSED = 0.0;
 
     private static final double KICK_OUT = 0.7;
     private static final double KICK_IN = 0.2;
-    private static final double KICK_TIME = 0.25;
-    private static final double targetVelocity = 1500;
+
+    private static final double TARGET_VELOCITY = 1500;
+    private static double targetVelocity = TARGET_VELOCITY;
 
     /* Turret PID (from LLNewV1 style) */
     private static final double KP = 0.9;
-    private static final double KD = 0.015;
-    private static final double MAX_TURRET_POWER = 0.4;
-    private static final double TAG_TOLERANCE = 1.5; // degrees
+
+
     private double filteredTx = 0.0;
     private double ty = 0;
     private double distance = 0;
@@ -112,10 +112,13 @@ public class OuttakeFSM {
                     if (Math.abs(yawError) < LOCK_ERROR) {
                         turret.setPower(0);
                         lastYawError = 0;
+                        stateTimer.reset();
+                        flywheelState = FlywheelState.SPIN_UP;
                     } else {
                         double derivative = yawError - lastYawError;
                         lastYawError = yawError;
 
+                        final double KD = 0.1;
                         double power = (KP * yawError) + (KD * derivative);
 
                         double speedLimit = Math.max(
@@ -131,10 +134,6 @@ public class OuttakeFSM {
                             (TAG_HEIGHT - LIMELIGHT_HEIGHT) /
                                     Math.tan(Math.toRadians(LIMELIGHT_ANGLE + ty));
 
-                    if (yawError > 3){
-                        stateTimer.reset();
-                        flywheelState = FlywheelState.SPIN_UP;
-                    }
                 } else {
                     turret.setPower(0);
                 }
@@ -145,7 +144,7 @@ public class OuttakeFSM {
                 shooter.setVelocity(targetVelocity);
                 shooter.setPower(1);
 
-                if (shooter.getVelocity() >= targetVelocity) {
+                if (shooter.getVelocity() >= targetVelocity - 50) {
                     stateTimer.reset();
                     flywheelState = FlywheelState.OPEN_STOPPER_KICK;
                 }
