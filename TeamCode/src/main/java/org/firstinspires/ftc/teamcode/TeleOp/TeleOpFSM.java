@@ -30,9 +30,9 @@ public class TeleOpFSM extends LinearOpMode{
 
         robot.Kicker.setPosition(0.0);
         robot.Stopper.setPosition(1.0);
-        robot.Hood.setPosition(1.0);
+        robot.Hood.setPosition(0.4);
 
-        outtakeFSM.init(hardwareMap);
+        outtakeFSM.init(hardwareMap, telemetry);
     }
     public void runOpMode() throws InterruptedException {
         HardwareStart();
@@ -48,19 +48,20 @@ public class TeleOpFSM extends LinearOpMode{
 
             outtakeFSM.update();
 
-            if (gamepad1.left_trigger > 0.1) {
+            if (gamepad2.left_trigger > 0.1) {
                 robot.Intake.setPower(1.0);
             } else {
                 robot.Intake.setPower(0.0);
             }
 
-            if (gamepad1.right_trigger > 0.1) {
+            if (gamepad2.right_trigger > 0.1) {
                 outtakeFSM.fireShots(1);
             }
 
             try {
                 telemetry.addData("Shooter velocity", robot.Shooter.getVelocity());
                 telemetry.addData("Outtake FSM Busy", outtakeFSM.isBusy());
+                telemetry.addData("State", outtakeFSM.getState());
             } catch (Exception ignored) {}
 
             telemetry.update();

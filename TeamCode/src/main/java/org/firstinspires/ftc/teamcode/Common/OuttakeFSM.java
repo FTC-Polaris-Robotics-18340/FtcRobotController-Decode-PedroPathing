@@ -4,8 +4,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 public class OuttakeFSM {
 
@@ -22,7 +26,7 @@ public class OuttakeFSM {
     /* =========================
        FSM
        ========================= */
-    private enum FlywheelState {
+    public enum FlywheelState {
         IDLE,
         TAG_LOCK,       // NEW
         SPIN_UP,
@@ -47,7 +51,7 @@ public class OuttakeFSM {
     private static final double KICK_OUT = 0.7;
     private static final double KICK_IN = 0.2;
 
-    private static final double TARGET_VELOCITY = 1500;
+    private static final double TARGET_VELOCITY = 1300;
 
     /* Turret PID (from LLNewV1 style) */
     private static final double KP = 0.9;
@@ -67,10 +71,12 @@ public class OuttakeFSM {
     private static final double TAG_HEIGHT = 24.0;       // inches
     private static final double LIMELIGHT_ANGLE = 20.0;  // degrees
 
+    private IMU imu;
+
     /* =========================
        Init
        ========================= */
-    public void init(HardwareMap hwMap) {
+    public void init(HardwareMap hwMap, Telemetry tele) {
 
         shooter = hwMap.get(DcMotorEx.class, "shooter");
         stopper = hwMap.get(Servo.class, "stopper");
@@ -79,12 +85,22 @@ public class OuttakeFSM {
         intake  = hwMap.get(DcMotorEx.class, "intake");
         limelight = hwMap.get(Limelight3A.class, "limelight");
 
+        imu = hwMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot orientation = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+        );
+        imu.initialize(new IMU.Parameters(orientation));
+
         shooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(285, 0, 0, 18.2));
         shooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        limelight.pipelineSwitch(0); // AprilTag pipeline
 
         stopper.setPosition(GATE_CLOSED);
         kicker.setPosition(KICK_IN);
         turret.setPower(0);
+        limelight.start();
     }
 
     /* =========================
@@ -180,11 +196,16 @@ public class OuttakeFSM {
                 break;
         }
 
-        telemetry.addData("Filtered Tx", filteredTx);
-        telemetry.addData("Yaw Error", yawError);
-        telemetry.addData("Turret Power", turret.getPower());
-        telemetry.addData("Ty", ty);
-        telemetry.addData("Distance (in)", distance);
+        YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
+        limelight.updateRobotOrientation(angles.getYaw());
+
+        telemetry.addData("Result Valid", limelight.getLatestResult().isValid());
+
+        //telemetry.addData("Filtered Tx", filteredTx);
+        //telemetry.addData("Yaw Error", yawError);
+        //telemetry.addData("Turret Power", turret.getPower());
+        //telemetry.addData("Ty", ty);
+        //telemetry.addData("Distance (in)", distance);
     }
 
     /* =========================
@@ -198,6 +219,10 @@ public class OuttakeFSM {
 
     public boolean isBusy() {
         return flywheelState != FlywheelState.IDLE;
+    }
+
+    public FlywheelState getState() {
+        return flywheelState;
     }
 
     /* =========================
