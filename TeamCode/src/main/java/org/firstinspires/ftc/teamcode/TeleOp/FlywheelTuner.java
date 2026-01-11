@@ -18,8 +18,8 @@ public class FlywheelTuner extends OpMode {
     double curTargetVelocity = highVelocity;
 
     // Initial PIDF coefficients for tuning
-    double F = 17.9430; // Feedforward gain to counteract constant forces like friction
-    double P = 286.1;   // Proportional gain to correct error based on how far off the velocity is
+    double F = 19.4; // Feedforward gain to counteract constant forces like friction
+    double P = 285;   // Proportional gain to correct error based on how far off the velocity is
 
     // Array of step sizes for making fine or coarse adjustments to P and F
     double[] stepSizes = {10.0, 1.0, 0.1, 0.001, 0.0001};

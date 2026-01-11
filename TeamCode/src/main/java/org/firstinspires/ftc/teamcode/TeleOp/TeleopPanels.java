@@ -23,8 +23,8 @@ public class TeleopPanels extends OpMode {
     private IMU imu;
 
     // ---------------- Flywheel PIDF ----------------
-    private final double F = 17.9430;
-    private final double P = 286.1;
+    private final double F = 18.2;
+    private final double P = 285;
 
     // ---------------- Hood control ----------------
     private static final double HOOD_KP = 0.6;

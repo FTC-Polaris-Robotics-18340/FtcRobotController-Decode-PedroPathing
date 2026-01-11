@@ -48,9 +48,8 @@ public class Robot {
         Hood    = hardwareMap.get(Servo.class, "hood");
 
         Shooter = hardwareMap.get(DcMotorEx.class, "shooter");
-        Shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         Shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(286.1, 0, 0, 17.9430);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(285, 0, 0, 18.2);
         Shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
     }

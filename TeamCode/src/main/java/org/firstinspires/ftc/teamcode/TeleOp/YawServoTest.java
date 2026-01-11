@@ -13,7 +13,7 @@ public class YawServoTest extends OpMode {
 
     @Override
     public void init() {
-        yawServo = hardwareMap.get(Servo.class, "YawServo");
+        yawServo = hardwareMap.get(Servo.class, "hood");
         telemetry.addLine("Init complete. Ready to test.");
         telemetry.update();
         yawServo.setPosition(0.0);

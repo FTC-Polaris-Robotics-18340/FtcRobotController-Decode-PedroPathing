@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Common.TurretServo;
 
 @Configurable
-@TeleOp(name = "Tele_26")
+@TeleOp(name = "Tele26")
 public class TeleOpV1 extends LinearOpMode{
     static Robot robot;
     static MecanumDrive drive;
@@ -53,14 +53,14 @@ public class TeleOpV1 extends LinearOpMode{
             );
 
 
-            if (gamepad1.left_trigger > 0.1) {
+            if (gamepad2.left_trigger > 0.1) {
                 robot.Intake.setPower(1.0);
             } else {
                 robot.Intake.setPower(0.0);
             }
 
             //Shooter spin-up
-            if (gamepad1.right_trigger > 0.1) {
+            if (gamepad2.right_trigger > 0.1) {
                 robot.Shooter.setVelocity(targetVelocity);
                 robot.Intake.setPower(1.0);
                 robot.Stopper.setPosition(0.0);
@@ -70,7 +70,7 @@ public class TeleOpV1 extends LinearOpMode{
             }
 
 
-          /*
+
 
             if (gamepad1.a){
                 drive.driveWithMotorPowers(1.0, 0.0, 0.0, 0.0);
@@ -87,7 +87,7 @@ public class TeleOpV1 extends LinearOpMode{
 
 
 
-
+/*
 
 
             if (gamepad1.right_bumper) {
@@ -104,13 +104,15 @@ public class TeleOpV1 extends LinearOpMode{
                 robot.Stopper.setPosition(0.0);
             }
 
+           */
+
             if (gamepad1.dpad_down) {
                 robot.Hood.setPosition(1.0);
             }else{
                 robot.Hood.setPosition(0.0);
             }
 
-           */
+
 
 
             double currentVelocity = robot.Shooter.getVelocity();
@@ -127,12 +129,15 @@ public class TeleOpV1 extends LinearOpMode{
 
 
 
+
             //Kicker (only fires if shooter is ready)
             if (shooterReady) {
                 robot.Kicker.setPosition(1.0); //kicks ball up
             } else {
                 robot.Kicker.setPosition(0.0); //does not kick
             }
+
+
 
 
 
