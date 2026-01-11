@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@TeleOp(name = "LLNewV1")
+@TeleOp(name = "LLV1")
 public class LLNewV1 extends OpMode {
 
     /* =========================
@@ -42,9 +42,10 @@ public class LLNewV1 extends OpMode {
     /* =========================
        DISTANCE CALC (CHANGE!)
        ========================= */
-    private static final double LIMELIGHT_HEIGHT = 10.0; // inches
-    private static final double TAG_HEIGHT = 24.0;       // inches
-    private static final double LIMELIGHT_ANGLE = 20.0;  // degrees
+    private static final double LIMELIGHT_HEIGHT = 11.25; // inches
+    private static final double TAG_HEIGHT = 29.5;       // inches
+    private static final double LIMELIGHT_ANGLE = 7.4; //8 --> 64.1 // degrees
+    //actual: 67 inch
 
     /* ========================= */
 

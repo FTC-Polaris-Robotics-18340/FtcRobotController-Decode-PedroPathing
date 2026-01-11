@@ -52,6 +52,7 @@ public class TeleOpV1 extends LinearOpMode{
                     true
             );
 
+
             if (gamepad1.left_trigger > 0.1) {
                 robot.Intake.setPower(1.0);
             } else {
@@ -61,11 +62,15 @@ public class TeleOpV1 extends LinearOpMode{
             //Shooter spin-up
             if (gamepad1.right_trigger > 0.1) {
                 robot.Shooter.setVelocity(targetVelocity);
-                //robot.Stopper.setPosition(0.0);
+                robot.Intake.setPower(1.0);
+                robot.Stopper.setPosition(0.0);
             } else {
                 robot.Shooter.setVelocity(0);
-                //robot.Stopper.setPosition(1.0);
+                robot.Stopper.setPosition(1.0);
             }
+
+
+          /*
 
             if (gamepad1.a){
                 drive.driveWithMotorPowers(1.0, 0.0, 0.0, 0.0);
@@ -80,7 +85,9 @@ public class TeleOpV1 extends LinearOpMode{
                 drive.driveWithMotorPowers(0.0, 0.0, 0.0, 1.0);
             }
 
-            /*
+
+
+
 
 
             if (gamepad1.right_bumper) {
@@ -97,24 +104,20 @@ public class TeleOpV1 extends LinearOpMode{
                 robot.Stopper.setPosition(0.0);
             }
 
-             */
-
-
-
             if (gamepad1.dpad_down) {
                 robot.Hood.setPosition(1.0);
             }else{
                 robot.Hood.setPosition(0.0);
             }
 
+           */
+
 
             double currentVelocity = robot.Shooter.getVelocity();
+            //calculates velocity difference
             double velocityError = Math.abs(targetVelocity - currentVelocity);
 
-            boolean shooterReady;
-
-
-
+            boolean shooterReady; //tells when velocity is reached
 
             if (velocityError < velocityTolerance) {
                 shooterReady = true;
@@ -130,6 +133,8 @@ public class TeleOpV1 extends LinearOpMode{
             } else {
                 robot.Kicker.setPosition(0.0); //does not kick
             }
+
+
 
 
 
